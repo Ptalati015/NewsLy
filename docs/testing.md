@@ -199,8 +199,11 @@ are out of scope.
   cookie (on Supabase's free plan refresh tokens never expire on their own).
 - A11. Session cookies are HttpOnly, SameSite=Lax, and Secure in production.
 - A12. The sign-in callback only redirects to paths on this site.
-- A13. Manual, by the owner: Google sign-in works on the Vercel preview, on a
-  phone.
+- A13. Manual, by the owner: Google sign-in works on the production address,
+  on a phone. (Supabase lists only exact redirect URLs, so previews can't sign
+  in; a wildcard for preview URLs would match other people's Vercel projects.)
+- A14. Supabase's redirect URLs are exact: the production callback and
+  localhost only, no wildcards.
 
 **Data access (database tests)**
 
@@ -209,7 +212,7 @@ are out of scope.
 - R2. `anon` reads nothing.
 - R3. An allowed reader can select states, elections, races and candidates,
   and cannot insert, update or delete.
-- R4. A reader sees and changes only their own `users` row, and only
+- R4. A reader sees and changes only their own profile row, and only
   `home_state`.
 - R5. The service role can write.
 
@@ -239,8 +242,9 @@ are out of scope.
 - U8. No sideways scrolling at 390 px.
 - U9. No serious or critical accessibility violations (`@axe-core/playwright`).
 - U10. Pages make no request to any host but the app and local Supabase.
-- U11. Looks like the approved mockup: Newsreader headlines, Public Sans body,
-  deep blue accent, white cards on light grey (QA compares screenshots).
+- U11. Looks like the approved mockup: Public Sans headings and body as in its
+  artboards, deep blue accent, white cards on light grey (QA compares
+  screenshots).
 
 ## Later steps, in outline
 
@@ -261,8 +265,8 @@ first eval run.
 
 ## Manual checks for the owner
 
-- A PR that touches sign-in: open the preview link on your phone and sign in
-  with Google.
+- A PR that touches sign-in: once it is merged, open the production address on
+  your phone and sign in with Google.
 - A PR that changes screens: open the preview on your phone and tap through.
 
 ## Bugs
