@@ -264,7 +264,12 @@ from the plan above:
   fictional sample candidates, labeled as samples, so the UI can be built and
   tested before any account exists. Production builds ignore it.
 - The database holds only what step 1 reads (states, elections, races,
-  candidates, profiles). News tables arrive with steps 2 and 3.
+  candidates, profiles) plus `beta_readers`. News tables arrive with steps 2
+  and 3.
+- The beta list is enforced twice: the app checks `ALLOWED_EMAILS`, and the
+  database only shows rows to emails in `beta_readers`, because the
+  publishable key is public and any Google account could otherwise read the
+  data through Supabase's API. The owner adds an email in both places.
 - Supabase's newer key names: the publishable key in the web app, the secret
   key only in the daily job. Account setup is in `docs/setup.md`.
 - Candidate cards show name, party and incumbency for now; the latest

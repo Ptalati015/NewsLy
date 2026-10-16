@@ -32,8 +32,19 @@ jobs:
         run: npm run check
       - name: Unit and database access tests
         run: npm test
-      - name: Production build (no keys)
+      - name: Production build (no real keys)
         run: npm run build
+        env:
+          # Stand-ins for the server-only keys, so the next step can prove
+          # neither one ends up in what the browser downloads.
+          SUPABASE_SECRET_KEY: sentinel-supabase-secret-not-a-key
+          AI_GATEWAY_API_KEY: sentinel-ai-gateway-not-a-key
+      - name: Check no server-only key reached the build output
+        run: |
+          if grep -rIl -e sentinel-supabase-secret -e sentinel-ai-gateway .next/static .next/server/app; then
+            echo "A server-only key appears in the files listed above." >&2
+            exit 1
+          fi
       - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium
       - name: Screen and sign-in tests

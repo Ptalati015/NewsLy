@@ -1,6 +1,11 @@
 // Google sends the reader back here (through Supabase) with a one-time code.
 // Exchange it for a session, refuse accounts that aren't on the beta list,
 // and record when the session started for the expiry rules.
+//
+// The beta list lives in two places: ALLOWED_EMAILS, which the app checks on
+// every request, and public.beta_readers, which keeps the data itself locked.
+// Both are checked here so a reader missing from either one is told so,
+// instead of signing in to empty screens.
 
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
@@ -34,6 +39,12 @@ export async function GET(request: NextRequest) {
   if (!isAllowedEmail(data.user.email, getAllowList())) {
     await supabase.auth.signOut({ scope: "local" });
     return back("not_allowed");
+  }
+
+  const listed = await supabase.rpc("is_beta_reader");
+  if (listed.error || listed.data !== true) {
+    await supabase.auth.signOut({ scope: "local" });
+    return back(listed.error ? "error" : "not_allowed");
   }
 
   const policy = getSessionPolicy();

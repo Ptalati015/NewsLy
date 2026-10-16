@@ -203,7 +203,11 @@ Model calls cost money; tests must not spend it.
 - Supabase RLS is on for every table. Readers get `select` on news tables;
   only the service role writes.
 - Sign-in is restricted to `ALLOWED_EMAILS` during the beta, checked server-side
-  after the OAuth callback.
+  after the OAuth callback and on every request. The database enforces the
+  same list through `public.beta_readers`: reader policies call
+  `public.is_beta_reader()`, so a Google account that isn't listed reads 0
+  rows even if it calls Supabase directly with the public key. New reader
+  tables use the same check.
 - Sessions use HttpOnly cookies (`@supabase/ssr`, PKCE) with refresh-token
   rotation, so you stay signed in. Supabase's own session limits are a paid
   feature, so the app enforces expiry itself in `proxy.ts` (Next.js 16's name

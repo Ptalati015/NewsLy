@@ -13,6 +13,12 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      beta_readers: {
+        Row: { email: string; added_at: string };
+        Insert: { email: string; added_at?: string };
+        Update: { email?: string; added_at?: string };
+        Relationships: [];
+      };
       states: {
         Row: { code: string; name: string; enabled: boolean };
         Insert: { code: string; name: string; enabled?: boolean };
@@ -174,6 +180,10 @@ export type Database = {
     };
     Views: { [_ in never]: never };
     Functions: {
+      is_beta_reader: {
+        Args: never;
+        Returns: boolean;
+      };
       set_home_state: {
         Args: { state_code: string };
         Returns: undefined;

@@ -63,31 +63,31 @@ async function Elections({
           ))}
         </div>
       )}
-      {past.length > 0 ? (
-        <>
-          <SectionHeading>Past</SectionHeading>
-          <ul className="mx-4 flex flex-col gap-3">
-            {past.map((election) => (
-              <li key={election.id}>
-                <Link
-                  href={electionPath(state, election)}
-                  className="flex items-center gap-3 rounded-2xl border border-line bg-card p-4 text-ink no-underline"
-                >
-                  <span className="flex grow flex-col gap-1">
-                    <span className="text-[17px] font-semibold">
-                      {election.name}
-                    </span>
-                    <span className="text-sm text-muted">
-                      {formatElectionDate(election.date)}
-                    </span>
+      <SectionHeading>Past</SectionHeading>
+      {past.length === 0 ? (
+        <Note>No past elections yet.</Note>
+      ) : (
+        <ul className="mx-4 flex flex-col gap-3">
+          {past.map((election) => (
+            <li key={election.id}>
+              <Link
+                href={electionPath(state, election)}
+                className="flex items-center gap-3 rounded-2xl border border-line bg-card p-4 text-ink no-underline"
+              >
+                <span className="flex grow flex-col gap-1">
+                  <span className="text-[17px] font-semibold">
+                    {election.name}
                   </span>
-                  <span className="text-[13px] text-muted">Archived</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : null}
+                  <span className="text-sm text-muted">
+                    {formatElectionDate(election.date)}
+                  </span>
+                </span>
+                <span className="text-[13px] text-muted">Archived</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
       <Note>Special elections are added here when they&apos;re called.</Note>
     </main>
   );
