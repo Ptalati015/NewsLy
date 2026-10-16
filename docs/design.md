@@ -279,6 +279,9 @@ from the plan above:
 - Demo mode (`npm run dev:demo`) shows the screens on the seed files with
   fictional sample candidates, labeled as samples, so the UI can be built and
   tested before any account exists. Production builds ignore it.
+- The app reads the time only through `lib/clock.ts`. In demo mode
+  `NEWSLY_NOW` pins it, so the browser tests run on October 20, 2026 (14 days
+  before the election); production always uses the real time.
 - The database holds only what step 1 reads (states, elections, races,
   candidates, allowed_emails, and `profiles`, which is the data model's
   `users` table: Supabase already has `auth.users`). News tables arrive with

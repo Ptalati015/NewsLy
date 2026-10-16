@@ -19,6 +19,10 @@ test("walks from the state picker to a candidate page", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "California" })).toBeVisible();
   await expect(page.getByText("Tuesday, November 3, 2026")).toBeVisible();
   await expect(page.getByText("12 statewide races")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: /General Election/ }),
+  ).toContainText(/14\s*days/);
+  await expect(page.getByText("No past elections yet.")).toBeVisible();
   await expectTouchTargets(page);
   await expectNoSideScroll(page);
   await snap(page, "03-elections");
@@ -28,6 +32,7 @@ test("walks from the state picker to a candidate page", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Statewide offices" }),
   ).toBeVisible();
+  await expect(page.getByText(/14 days/)).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Board of Equalization" }),
   ).toBeVisible();

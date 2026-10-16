@@ -10,6 +10,7 @@ import {
 import { ScreenSkeleton } from "@/components/shared/skeleton";
 import { TopBar } from "@/components/shared/top-bar";
 import { getRepo } from "@/lib/auth/viewer";
+import { now as clockNow } from "@/lib/clock";
 import { electionPath, loadState } from "@/lib/data/load";
 import type { Election, NewsRepo, UsState } from "@/lib/data/types";
 import {
@@ -38,7 +39,7 @@ async function Elections({
   const state = await loadState(repo, (await params).state);
   if (!state.enabled) return <ComingSoon state={state} />;
 
-  const now = new Date();
+  const now = clockNow();
   const elections = await repo.listElections(state.code);
   const upcoming = elections.filter((e) => daysUntil(e.date, now) >= 0);
   const past = elections.filter((e) => daysUntil(e.date, now) < 0).reverse();

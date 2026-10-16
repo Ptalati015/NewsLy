@@ -6,6 +6,7 @@ import { connection } from "next/server";
 import { cache } from "react";
 import { getAllowList } from "@/lib/auth/allow-list";
 import { checkSession } from "@/lib/auth/session-check";
+import { nowMs } from "@/lib/clock";
 import { getSessionPolicy, getSupabaseConfig, isDemoMode } from "@/lib/config";
 import { createSeedRepo } from "@/lib/data/seed-repo";
 import { createSupabaseRepo } from "@/lib/data/supabase-repo";
@@ -46,7 +47,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     readCookie: (name) => cookieStore.get(name)?.value,
     allowList: getAllowList(),
     policy: getSessionPolicy(),
-    now: Date.now(),
+    now: nowMs(),
   });
   if (!verdict.ok) return null;
 

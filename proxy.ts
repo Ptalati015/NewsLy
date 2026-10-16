@@ -9,6 +9,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getAllowList } from "@/lib/auth/allow-list";
 import { checkSession } from "@/lib/auth/session-check";
+import { nowMs } from "@/lib/clock";
 import {
   LAST_SEEN_COOKIE,
   SIGNED_IN_COOKIE,
@@ -49,7 +50,7 @@ export async function proxy(request: NextRequest) {
   if (pathname === "/auth/callback") return session.response();
 
   const policy = getSessionPolicy();
-  const now = Date.now();
+  const now = nowMs();
   const verdict = checkSession({
     claims,
     readCookie: (name) => request.cookies.get(name)?.value,

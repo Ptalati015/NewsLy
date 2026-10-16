@@ -39,7 +39,13 @@ export default defineConfig({
     {
       command: `next dev --port ${DEMO_PORT} --hostname 127.0.0.1`,
       url: `http://127.0.0.1:${DEMO_PORT}/sign-in`,
-      env: { NEWSLY_DEMO: "1", LLM_PROVIDER: "fake" },
+      // The clock is pinned so countdowns and screenshots don't change from
+      // day to day: October 20, 2026 is 14 days before the election.
+      env: {
+        NEWSLY_DEMO: "1",
+        NEWSLY_NOW: "2026-10-20T12:00:00-07:00",
+        LLM_PROVIDER: "fake",
+      },
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },

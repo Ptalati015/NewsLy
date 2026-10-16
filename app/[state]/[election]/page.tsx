@@ -10,6 +10,7 @@ import {
 import { ScreenSkeleton } from "@/components/shared/skeleton";
 import { TopBar } from "@/components/shared/top-bar";
 import { getRepo } from "@/lib/auth/viewer";
+import { now } from "@/lib/clock";
 import { loadElection, loadState, racePath, statePath } from "@/lib/data/load";
 import type { Race } from "@/lib/data/types";
 import {
@@ -61,7 +62,7 @@ async function Races({
   const state = await loadState(repo, p.state);
   const election = await loadElection(repo, state, p.election);
   const races = await repo.listRaces(election.id);
-  const days = daysUntil(election.date, new Date());
+  const days = daysUntil(election.date, now());
   const when =
     days >= 0
       ? `${formatElectionDate(election.date, "short")} · ${countdownLabel(days)}`

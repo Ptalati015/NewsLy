@@ -11,6 +11,7 @@ import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 import { getAllowList, isAllowedEmail } from "@/lib/auth/allow-list";
 import { safeNextPath } from "@/lib/auth/safe-next";
+import { nowMs } from "@/lib/clock";
 import { LAST_SEEN_COOKIE, SIGNED_IN_COOKIE } from "@/lib/auth/session-policy";
 import { getSessionPolicy, getSupabaseConfig } from "@/lib/config";
 import { trackingCookieOptions } from "@/lib/supabase/cookies";
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest) {
   }
 
   const policy = getSessionPolicy();
-  const now = String(Date.now());
+  const now = String(nowMs());
   const cookieStore = await cookies();
   cookieStore.set(
     SIGNED_IN_COOKIE,
