@@ -38,7 +38,9 @@ After November 3 the election stays browsable as a past election.
 Six screens, each one tap deeper than the last. A Race step sits between
 Election and Candidates because a general election has many races.
 
-1. **Sign in.** Google only. Only on the first visit; after that you stay in.
+1. **Sign in.** Google only. You stay signed in, but not forever: the session
+   ends 30 days after sign-in or after 7 days without use, then you sign in
+   again. Standard practice, enforced by the app.
 2. **Pick a state.** All 50 listed; California active, the rest "Coming soon".
    Remembered, so the screen is skipped next time.
 3. **Elections in California.** Upcoming first, with date and countdown; past
@@ -212,9 +214,17 @@ Settled with the owner on October 16, 2026:
 - Sign-in: Google only.
 - Outlet lean labels: yes, from AllSides, with attribution; non-commercial use.
 - Theme: the mockup's calm blue and serif look stays; keep it simple.
-- Model: the cheapest workable provider, swappable, not tied to one vendor.
-  Recommended: Vercel AI Gateway key, Claude Haiku 5.5 first, others compared
-  on the eval set (see "Model layer and cost"). Owner to confirm.
+- Model: Claude Haiku 5.5 through the Vercel AI Gateway, with the cache
+  strategy above. Confirmed by the owner on October 16, 2026. Still swappable
+  by config; other models are compared on the eval set before any switch.
+- Sign-in sessions: stay signed in, expire after 30 days or 7 idle days.
+- Team: three project threads, Dev, QA and PM, with matching agent files in
+  `.claude/agents/`. The owner works through PM. See `AGENTS.md`, "Team".
+- Testing budget: tests never call a real model; live runs are opt-in with a
+  dollar cap; the daily job has kill switches. See `AGENTS.md`, "Testing and
+  cost guardrails".
+- Keys and accounts are created by the owner when we say we're ready: Vercel
+  (and an AI Gateway key), Supabase, a Google OAuth client.
 - Name: NewsLy is a working name. Shortlist after a conflict check on
   October 16, 2026: Clear Slate (recommended; a slate is the list of candidates
   on a ballot), Even Keel, Evenhand. Rejected as taken: Stump, Tilt, Level,

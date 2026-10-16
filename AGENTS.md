@@ -144,12 +144,61 @@ again, unless something about how we analyze it changes.
   required, non-commercial only). Keep the attribution line wherever a lean label
   shows, and keep the project non-commercial while that data is in use.
 
+## Team: Dev, QA, PM
+
+Three roles, each with a project thread and a matching agent definition in
+`.claude/agents/`. The owner talks to PM; PM routes work.
+
+| Role | Owns | Hands off |
+| --- | --- | --- |
+| Dev (`.claude/agents/dev.md`) | Implementation, one PR per build step, driving PRs to green | A PR ready for test goes to QA via PM, with what changed and how to run it |
+| QA (`.claude/agents/qa.md`) | Test plans, Playwright and unit test review, bug reports, verifying fixes | Failures go back to Dev via PM with repro steps |
+| PM (`.claude/agents/pm.md`) | Backlog and status board, decisions, when to ask the owner for keys, budget watch, alarms | Review and merge requests go to the owner |
+
+Standing rules from the owner:
+
+- **Alarms go to the owner immediately**: a security problem, an unexpected
+  cost, a slipping date, anything that looks wrong. One line, with a
+  recommendation.
+- **Keys and accounts are the owner's to create** (Vercel and its AI Gateway,
+  Supabase, Google OAuth). We say when we are ready for them and what to paste
+  where; we never ask for a value in chat and never commit one.
+- **Ask questions as needed**, with options on short lines and a recommendation.
+
+## Testing and cost guardrails
+
+Model calls cost money; tests must not spend it.
+
+- `LLM_PROVIDER=fake` is the default outside production. The fake provider
+  returns fixtures from `evals/recorded/` keyed by the same cache key as real
+  calls, so unit, integration and Playwright tests never reach a model. CI sets
+  it explicitly.
+- Any run that would make real model calls (an eval, a local trial of the daily
+  job) is opt-in: `--live` plus `--budget-usd` (default 0.50). The script
+  estimates the cost from token counts first and stops at the cap.
+- The daily job has two kill switches: `MAX_MODEL_CALLS_PER_RUN` (default 200)
+  and `MAX_RUN_COST_USD` (default 1.00). Hitting either ends the run cleanly,
+  logs it in `job_runs`, and keeps yesterday's data up.
+- Every call's tokens and estimated cost land in `llm_calls`; `job_runs` carries
+  the day's total. A day costing more than twice the 7-day average is an alarm
+  (see Team).
+- The Vercel AI Gateway credit is prepaid, so the hard ceiling is what the owner
+  has loaded. Keep the free monthly credit as the budget until the owner says
+  otherwise.
+- Playwright runs against a seeded database with precomputed analyses, never
+  against live news or a model.
+
 ## Security basics (Next.js + Supabase)
 
 - Supabase RLS is on for every table. Readers get `select` on news tables;
   only the service role writes.
 - Sign-in is restricted to `ALLOWED_EMAILS` during the beta, checked server-side
   after the OAuth callback.
+- Sessions use HttpOnly cookies (`@supabase/ssr`, PKCE) with refresh-token
+  rotation, so you stay signed in. The app enforces expiry itself in
+  middleware: `SESSION_MAX_AGE_DAYS` (default 30) since sign-in and
+  `SESSION_IDLE_DAYS` (default 7) since last activity; past either, sign out
+  and return to the sign-in screen.
 - Server Actions and route handlers validate input with Zod and never trust
   route params for authorization.
 - Article HTML fetched by the job is parsed with a sanitizing extractor; raw
