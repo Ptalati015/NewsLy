@@ -74,8 +74,9 @@ docs/                design.md and any decision notes
    and model keys are server-only: never import them in a client component and
    never prefix them with `NEXT_PUBLIC_`.
 5. **Structured output, validated.** Model responses are requested as JSON
-   against a Zod schema (`generateObject`) and validated before they are stored.
-   A response that fails validation is retried once, then logged and skipped.
+   against a Zod schema (AI SDK 7: `generateText` with `Output.object`; the older
+   `generateObject` is deprecated) and validated before they are stored. A
+   response that fails validation is retried once, then logged and skipped.
 6. **Attribute every claim.** Summaries say who said what ("the campaign said",
    "the Times reported") and link every bullet to its source articles. No
    adjectives about candidates, no predictions.
@@ -87,9 +88,13 @@ docs/                design.md and any decision notes
 ## Model layer
 
 - One factory, `lib/llm/provider.ts`, returns an AI SDK model from
-  `LLM_PROVIDER` + `LLM_MODEL`. Supported out of the box: `google`, `openai`,
-  `anthropic`, `groq`, `gateway` (Vercel AI Gateway). Adding a provider is one
-  case in that factory plus its npm package.
+  `LLM_PROVIDER` + `LLM_MODEL`. Supported out of the box: `gateway` (Vercel AI
+  Gateway, the recommended default: one key, any model as `provider/model`),
+  `google`, `openai`, `anthropic`, `groq`, `mistral`. Adding a provider is one
+  case in that factory plus its npm package. Pin `ai` to the 7.x line.
+- Default model: `anthropic/claude-haiku-5-5` through the gateway (about $2 a
+  month at beta volume, inside the gateway's free credit). Cost table and the
+  reasoning are in `docs/design.md`, "Model layer and cost".
 - Prompts live in `lib/llm/prompts/*.ts` as plain template functions. The fixed
   part (rubric, output schema, style rules) comes first so providers that cache
   prefixes get the discount; the article comes last.

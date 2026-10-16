@@ -127,8 +127,25 @@ option without being tied to one vendor. So:
   ~400 output tokens each, plus ~25 short digests. Roughly 11M input and 1.5M
   output tokens a month.
 
-Cost comparison and the recommended default: see "Decisions" below (filled in
-from a provider check on October 16, 2026).
+**Cost at that volume** (list prices checked October 16, 2026; free tiers
+noted). At this size every small model costs a few dollars a month or nothing,
+so the real differences are judgment quality, data policy and reliability.
+
+| Option | Monthly cost | Notes |
+| --- | --- | --- |
+| Vercel AI Gateway, any model below | $0 within the $5/month free credit | One Vercel key, no markup, model is a string; may ask for a card to verify, nothing charged unless credits are bought; the free credit ends after a first purchase |
+| Claude Haiku 5.5 | $1.85 list; about $0.95 with batch and prefix caching | Best judgment per dollar for this task; 90% discount on the cached rubric |
+| Groq, GPT-OSS-20B | $1.28 | Open-weight model; free tier too small (200K tokens/day) |
+| Mistral Small 4 | $2.55 | Free "Experiment" plan trains on your prompts |
+| OpenAI GPT-5.4 nano | $4.08 | No free tier or credits |
+| Gemini 3.1 Flash-Lite | $0 on the free tier, $5.00 paid | Free tier: Google may use prompts to improve products; daily quota unpublished and has been cut before; no prefix-cache discount at our prompt size |
+
+**Recommended default:** Vercel AI Gateway as the key, `anthropic/claude-haiku-5-5`
+as the first model, with Gemini Flash-Lite, Groq GPT-OSS and Mistral Small
+compared on the eval set through the same key. If the gateway's card check is
+unwanted, the fallback is Gemini Flash-Lite on a Google AI Studio key (no card)
+with the data-use trade-off above. Articles are public and no personal data is
+sent, so that trade-off is about comfort, not privacy risk.
 
 ## Caching: ask the model once
 
@@ -195,10 +212,14 @@ Settled with the owner on October 16, 2026:
 - Sign-in: Google only.
 - Outlet lean labels: yes, from AllSides, with attribution; non-commercial use.
 - Theme: the mockup's calm blue and serif look stays; keep it simple.
-- Model: the cheapest workable provider, swappable. Default to be confirmed
-  from the comparison the owner receives with this PR.
-- Name: NewsLy is a working name; a replacement is being chosen. Until then the
-  name lives in one constant so the rename is one line.
+- Model: the cheapest workable provider, swappable, not tied to one vendor.
+  Recommended: Vercel AI Gateway key, Claude Haiku 5.5 first, others compared
+  on the eval set (see "Model layer and cost"). Owner to confirm.
+- Name: NewsLy is a working name. Shortlist after a conflict check on
+  October 16, 2026: Clear Slate (recommended; a slate is the list of candidates
+  on a ballot), Even Keel, Evenhand. Rejected as taken: Stump, Tilt, Level,
+  Candidly, Unspun, Slate Reader. Until chosen, the name lives in one constant
+  so the rename is one line.
 
 Earlier calls, unchanged: real sign-in with the owner as the only beta account;
 a Race step in the flow; 12 statewide races; one refresh each morning at 5 AM
