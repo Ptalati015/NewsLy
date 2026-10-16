@@ -15,7 +15,7 @@ Until these exist, the app still runs locally in demo mode
 | Supabase project URL | Supabase, Project Settings > API Keys | Vercel env `NEXT_PUBLIC_SUPABASE_URL` |
 | Supabase publishable key (`sb_publishable_...`) | Same page | Vercel env `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` |
 | Google OAuth client ID and secret | Google Cloud console | Supabase, Authentication > Sign In / Providers > Google (not Vercel) |
-| Your Gmail address | You | Vercel env `ALLOWED_EMAILS`, and one row in the Supabase table `beta_readers` |
+| Your Gmail address | You | Vercel env `ALLOWED_EMAILS`, and one row in the Supabase table `allowed_emails` |
 
 The Supabase secret key (`sb_secret_...`) is not needed yet. It goes into
 GitHub Actions secrets for the daily news run in build step 2, never into
@@ -30,7 +30,7 @@ Vercel.
    `supabase/migrations/20261016120000_skeleton.sql`, and run it once. Then
    paste and run `supabase/seed.sql` (safe to run again).
 3. Still in SQL Editor, add yourself to the beta list:
-   `insert into public.beta_readers (email) values ('you@gmail.com');`
+   `insert into public.allowed_emails (email) values ('you@gmail.com');`
    The database only shows its data to emails in this table, so the list
    holds even for someone who calls Supabase directly. Add each friend the
    same way, and to `ALLOWED_EMAILS` in section 3.
@@ -90,5 +90,5 @@ If the sign-in screen says "Sign-in isn't set up yet", the two
 `NEXT_PUBLIC_SUPABASE_*` variables are missing in Vercel. If Google says the
 redirect URI doesn't match, recheck the URI in section 2, step 3. If you land
 back on sign-in with "isn't on the beta list", check that the email is both in
-`ALLOWED_EMAILS` (then redeploy) and in the `beta_readers` table (section 1,
+`ALLOWED_EMAILS` (then redeploy) and in the `allowed_emails` table (section 1,
 step 3).

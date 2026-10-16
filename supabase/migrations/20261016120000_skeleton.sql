@@ -62,15 +62,15 @@ create table public.profiles (
 -- every request, but the publishable key is public, so anyone with a Google
 -- account could get a Supabase session and query the API directly. This table
 -- keeps the data locked to the same people. The owner adds a reader in the SQL
--- Editor: insert into public.beta_readers (email) values ('name@gmail.com');
-create table public.beta_readers (
+-- Editor: insert into public.allowed_emails (email) values ('name@gmail.com');
+create table public.allowed_emails (
   email text primary key check (email like '_%@_%'),
   added_at timestamptz not null default now()
 );
 
 -- True when the signed-in reader's email is on the beta list. Runs as the
 -- table's owner so readers can ask without being able to see the list.
-create function public.is_beta_reader()
+create function public.is_allowed()
 returns boolean
 language sql
 stable
@@ -78,15 +78,15 @@ security definer
 set search_path = ''
 as $$
   select exists (
-    select 1 from public.beta_readers b
+    select 1 from public.allowed_emails b
     where lower(btrim(b.email)) = lower(btrim((select auth.jwt()) ->> 'email'))
   );
 $$;
 
-revoke execute on function public.is_beta_reader() from public, anon;
-grant execute on function public.is_beta_reader() to authenticated;
+revoke execute on function public.is_allowed() from public, anon;
+grant execute on function public.is_allowed() to authenticated;
 
-alter table public.beta_readers enable row level security;
+alter table public.allowed_emails enable row level security;
 alter table public.states enable row level security;
 alter table public.elections enable row level security;
 alter table public.races enable row level security;
@@ -95,36 +95,36 @@ alter table public.profiles enable row level security;
 
 -- Grants are explicit rather than relying on project defaults.
 revoke all on public.states, public.elections, public.races, public.candidates, public.profiles,
-  public.beta_readers
+  public.allowed_emails
   from anon, authenticated;
 grant select on public.states, public.elections, public.races, public.candidates
   to authenticated;
 grant select, insert, update (home_state, updated_at) on public.profiles to authenticated;
 
--- beta_readers has no policies: nobody reads or changes it through the API.
+-- allowed_emails has no policies: nobody reads or changes it through the API.
 create policy "Beta readers can read states"
   on public.states for select to authenticated
-  using ((select public.is_beta_reader()));
+  using ((select public.is_allowed()));
 create policy "Beta readers can read elections"
   on public.elections for select to authenticated
-  using ((select public.is_beta_reader()));
+  using ((select public.is_allowed()));
 create policy "Beta readers can read races"
   on public.races for select to authenticated
-  using ((select public.is_beta_reader()));
+  using ((select public.is_allowed()));
 create policy "Beta readers can read candidates"
   on public.candidates for select to authenticated
-  using ((select public.is_beta_reader()));
+  using ((select public.is_allowed()));
 
 create policy "Readers can read their own profile"
   on public.profiles for select to authenticated
-  using ((select auth.uid()) = id and (select public.is_beta_reader()));
+  using ((select auth.uid()) = id and (select public.is_allowed()));
 create policy "Readers can create their own profile"
   on public.profiles for insert to authenticated
-  with check ((select auth.uid()) = id and (select public.is_beta_reader()));
+  with check ((select auth.uid()) = id and (select public.is_allowed()));
 create policy "Readers can update their own profile"
   on public.profiles for update to authenticated
-  using ((select auth.uid()) = id and (select public.is_beta_reader()))
-  with check ((select auth.uid()) = id and (select public.is_beta_reader()));
+  using ((select auth.uid()) = id and (select public.is_allowed()))
+  with check ((select auth.uid()) = id and (select public.is_allowed()));
 
 -- Saves the reader's state so the state picker is skipped next time. Runs as
 -- the caller, so the profile policies above still apply.
@@ -138,7 +138,7 @@ begin
   if auth.uid() is null then
     raise exception 'Not signed in' using errcode = '42501';
   end if;
-  if not public.is_beta_reader() then
+  if not public.is_allowed() then
     raise exception 'Not on the beta list' using errcode = '42501';
   end if;
   if not exists (

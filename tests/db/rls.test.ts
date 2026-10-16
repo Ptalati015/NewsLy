@@ -62,7 +62,7 @@ beforeAll(async () => {
     ('${READER.sub}', '${READER.email}'), ('${OTHER.sub}', '${OTHER.email}'),
     ('${STRANGER.sub}', '${STRANGER.email}')`);
   // Listed the way an owner might type it: case and spaces don't matter.
-  await db.exec(`insert into public.beta_readers (email) values
+  await db.exec(`insert into public.allowed_emails (email) values
     (' Reader@Example.com '), ('${OTHER.email}')`);
   await db.exec(
     `insert into public.profiles (id, home_state) values ('${OTHER.sub}', 'CA')`,
@@ -193,16 +193,16 @@ describe("signed-in account that isn't on the beta list", () => {
     ).rejects.toThrow(/row-level security/);
   });
 
-  it("is told so by is_beta_reader, which readers on the list pass", async () => {
+  it("is told so by is_allowed, which readers on the list pass", async () => {
     const no = await as<{ ok: boolean }>(
       "authenticated",
       STRANGER,
-      "select public.is_beta_reader() as ok",
+      "select public.is_allowed() as ok",
     );
     const yes = await as<{ ok: boolean }>(
       "authenticated",
       READER,
-      "select public.is_beta_reader() as ok",
+      "select public.is_allowed() as ok",
     );
     expect([no.rows[0]?.ok, yes.rows[0]?.ok]).toEqual([false, true]);
   });
@@ -211,7 +211,7 @@ describe("signed-in account that isn't on the beta list", () => {
     await db.exec("begin");
     try {
       await db.exec(
-        `delete from public.beta_readers where email = '${OTHER.email}'`,
+        `delete from public.allowed_emails where email = '${OTHER.email}'`,
       );
       await db.query(`select set_config('request.jwt.claims', $1, true)`, [
         JSON.stringify({ ...OTHER, role: "authenticated" }),
@@ -231,13 +231,13 @@ describe("signed-in account that isn't on the beta list", () => {
 describe("the beta list", () => {
   it("can't be read or changed by readers", async () => {
     await expect(
-      as("authenticated", READER, "select * from public.beta_readers"),
+      as("authenticated", READER, "select * from public.allowed_emails"),
     ).rejects.toThrow(/permission denied/);
     await expect(
       as(
         "authenticated",
         STRANGER,
-        `insert into public.beta_readers (email) values ('${STRANGER.email}')`,
+        `insert into public.allowed_emails (email) values ('${STRANGER.email}')`,
       ),
     ).rejects.toThrow(/permission denied/);
   });
@@ -247,9 +247,9 @@ describe("service role", () => {
   it("can write reference data and the beta list", async () => {
     const { rows } = await as<{ n: number }>("service_role", null, [
       "insert into public.states values ('ZZ', 'Nowhere', false)",
-      "insert into public.beta_readers (email) values ('new@example.com')",
+      "insert into public.allowed_emails (email) values ('new@example.com')",
       `select (select count(*)::int from public.states where code = 'ZZ')
-            + (select count(*)::int from public.beta_readers where email = 'new@example.com') as n`,
+            + (select count(*)::int from public.allowed_emails where email = 'new@example.com') as n`,
     ]);
     expect(rows[0]?.n).toBe(2);
   });
@@ -263,7 +263,7 @@ describe("anonymous visitor", () => {
       "races",
       "candidates",
       "profiles",
-      "beta_readers",
+      "allowed_emails",
     ]) {
       await expect(
         as("anon", null, `select * from public.${table}`),
@@ -277,7 +277,7 @@ describe("anonymous visitor", () => {
       as("anon", null, "select public.set_home_state('CA')"),
     ).rejects.toThrow(/permission denied/);
     await expect(
-      as("anon", null, "select public.is_beta_reader()"),
+      as("anon", null, "select public.is_allowed()"),
     ).rejects.toThrow(/permission denied/);
   });
 });

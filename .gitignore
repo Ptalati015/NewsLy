@@ -36,6 +36,9 @@ coverage/
 playwright-report/
 test-results/
 
+# eval cache: real article text fetched at eval time, never committed
+evals/.cache/
+
 # local scratch
 tmp/
 *.local

@@ -123,8 +123,11 @@ option without being tied to one vendor. So:
   provider and model are env settings. Switching is a config change.
 - **Structured JSON output** validated against a schema, so every provider
   returns the same shape.
-- **An eval set** of about 30 hand-labeled articles in `evals/` to compare
-  providers on flag agreement before switching the default.
+- **An eval set** of about 30 hand-labeled real articles in `evals/` to
+  compare providers on flag agreement before switching the default. The repo
+  is public, so each entry holds the URL, outlet, date, labels and the short
+  quotes behind each label, never the article text; full text is fetched at
+  eval time into a gitignored cache.
 - **Volume** at the beta scope: about 100 articles a day, ~3,500 input and
   ~400 output tokens each, plus ~25 short digests. Roughly 11M input and 1.5M
   output tokens a month.
@@ -148,6 +151,10 @@ compared on the eval set through the same key. If the gateway's card check is
 unwanted, the fallback is Gemini Flash-Lite on a Google AI Studio key (no card)
 with the data-use trade-off above. Articles are public and no personal data is
 sent, so that trade-off is about comfort, not privacy risk.
+
+Before anyone buys gateway credits, the first live smoke run confirms that
+Haiku 5.5 is allowed on the free tier: the free credit has been reported to
+cover only some models, and a first purchase ends the free monthly credit.
 
 ## Caching: ask the model once
 
@@ -178,11 +185,12 @@ new parameter is introduced.
 
 ## Data model
 
-Ten tables cover the beta. The news tables are shared by every user.
+Eleven tables cover the beta. The news tables are shared by every user.
 
 | Table | What it holds | Key fields |
 | --- | --- | --- |
 | users | Account and saved state | id, email, home_state |
+| allowed_emails | Who may sign in during the beta; reader policies call `is_allowed()` against it on every request | email, added_at |
 | states | All 50 states, live or not | code, name, enabled |
 | elections | One row per election | id, state_code, date, name, type |
 | races | One office on one ballot | id, election_id, office, district, level |
@@ -202,7 +210,7 @@ a name with someone famous doesn't pull the wrong stories.
 | Part | Choice | Why | Cost |
 | --- | --- | --- | --- |
 | Website | Next.js, TypeScript, Tailwind on Vercel | Phone-friendly, deploys from GitHub on push | Free on Hobby (personal, non-commercial). Pro is $20/month if it ever earns money |
-| Sign-in | Supabase Auth, Google provider, allow-list | Built into the database service | Free up to 50,000 monthly users |
+| Sign-in | Supabase Auth, Google provider only, allow-list enforced in RLS | Built into the database service | Free up to 50,000 monthly users |
 | Database | Supabase Postgres | One service for data and sign-in | Free up to 500 MB; pauses after 7 idle days, which the daily run prevents |
 | Daily run | Node script on GitHub Actions | Can run for hours | Free within included minutes |
 | Models | Vercel AI SDK, provider by config | Cheapest option, no lock-in | See Decisions |
@@ -211,7 +219,8 @@ a name with someone famous doesn't pull the wrong stories.
 
 Settled with the owner on October 16, 2026:
 
-- Sign-in: Google only.
+- Sign-in: Google only, with the beta allow-list enforced in the database
+  (RLS, `is_allowed()`) as well as in the app; the email provider stays off.
 - Outlet lean labels: yes, from AllSides, with attribution; non-commercial use.
 - Theme: the mockup's calm blue and serif look stays; keep it simple.
 - Model: Claude Haiku 5.5 through the Vercel AI Gateway, with the cache
@@ -220,11 +229,16 @@ Settled with the owner on October 16, 2026:
 - Sign-in sessions: stay signed in, expire after 30 days or 7 idle days.
 - Team: three project threads, Dev, QA and PM, with matching agent files in
   `.claude/agents/`. The owner works through PM. See `AGENTS.md`, "Team".
-- Testing budget: tests never call a real model; live runs are opt-in with a
-  dollar cap; the daily job has kill switches. See `AGENTS.md`, "Testing and
-  cost guardrails".
+- Testing budget: tests never call a real model (a deterministic fake provider
+  answers from the input, so there are no recordings to re-make); live runs are
+  opt-in from a manual workflow with a dollar cap; the daily job stops at 200
+  calls or $0.25 a run and refuses the fake provider outside dry runs. Only
+  synthetic article text goes in the public repo. See `AGENTS.md`, "Testing
+  and cost guardrails", and QA's `docs/testing.md`.
 - Keys and accounts are created by the owner when we say we're ready: Vercel
-  (and an AI Gateway key), Supabase, a Google OAuth client.
+  (and two AI Gateway keys, one for the daily job and one for live tests, each
+  with its own budget), Supabase, a Google OAuth client. Model keys live only
+  in GitHub Actions secrets.
 - Name: NewsLy is a working name. Shortlist after a conflict check on
   October 16, 2026: Clear Slate (recommended; a slate is the list of candidates
   on a ballot), Even Keel, Evenhand. Rejected as taken: Stump, Tilt, Level,
@@ -239,11 +253,13 @@ Pacific.
 
 0. **This PR.** Repo docs, env example, cloud-session hook.
 1. **Skeleton.** Next.js app on Vercel, Supabase project, Google sign-in with
-   allow-list, state/election/race screens on seed data, CI.
+   the allow-list enforced in RLS (`is_allowed()`), state/election/race screens
+   on seed data, CI with no secrets.
 2. **Daily run.** News search, dedupe, article text, saved to the database;
    dry-run mode; job log.
-3. **Analysis.** Provider factory, prompts, schema, cache, per-article analysis
-   and daily digest; candidate page; evals.
+3. **Analysis.** Provider factory (fake first, refused outside dry runs),
+   prompts, schema, cache, kill switches, per-article analysis and daily
+   digest; candidate page; evals and the manual live workflow.
 4. **Tune.** A week of real reading, then adjust flags, sources and the model.
 
 **Step 1 as built (October 16, 2026).** Where the build fills in or departs
@@ -264,13 +280,17 @@ from the plan above:
   fictional sample candidates, labeled as samples, so the UI can be built and
   tested before any account exists. Production builds ignore it.
 - The database holds only what step 1 reads (states, elections, races,
-  candidates, profiles) plus `beta_readers`. News tables arrive with steps 2
-  and 3.
-- The beta list is enforced twice: the app checks `ALLOWED_EMAILS`, and the
-  database only shows rows to emails in `beta_readers`, because the
-  publishable key is public and any Google account could otherwise read the
-  data through Supabase's API. The owner adds an email in both places.
-- Supabase's newer key names: the publishable key in the web app, the secret
+  candidates, allowed_emails, and `profiles`, which is the data model's
+  `users` table: Supabase already has `auth.users`). News tables arrive with
+  steps 2 and 3.
+- The allow-list is enforced in the app (`ALLOWED_EMAILS`, every request) and
+  in the database (`allowed_emails`, through `is_allowed()` in every reader
+  policy). The table can't be filled from the env var without a server key in
+  the web app, so the owner adds each email in both places, with one SQL line
+  (`docs/setup.md`).
+- Supabase's newer key names (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and
+  `SUPABASE_SECRET_KEY`, replacing the anon and service role keys Supabase
+  retires by the end of 2026): the publishable key in the web app, the secret
   key only in the daily job. Account setup is in `docs/setup.md`.
 - Candidate cards show name, party and incumbency for now; the latest
   headline and coverage balance arrive with step 3.

@@ -50,7 +50,7 @@ npm run dev:demo               # http://localhost:3000, no sign-in
 With the real accounts (see [`docs/setup.md`](docs/setup.md) for creating them):
 
 ```
-cp .env.example .env.local     # Supabase URL, publishable key, your email
+cp .env.example .env.local     # Supabase values; the fake model provider is the default
 npm run dev                    # http://localhost:3000
 ```
 
@@ -62,7 +62,8 @@ Tests: `npm run check`, `npm test`, then `npm run build && npm run e2e`.
 app/          Next.js routes          jobs/daily/   the news run
 components/   UI, one folder a screen supabase/     migrations and seed
 lib/llm/      prompts, schemas, cache data/         candidates, feeds, outlet lean
-evals/        labeled articles        docs/         design.md
+tests/        fixtures and unit tests evals/        article URLs, labels, quotes
+docs/         design.md, testing.md
 ```
 
 ## Credits

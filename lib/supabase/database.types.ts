@@ -13,7 +13,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      beta_readers: {
+      allowed_emails: {
         Row: { email: string; added_at: string };
         Insert: { email: string; added_at?: string };
         Update: { email?: string; added_at?: string };
@@ -180,7 +180,7 @@ export type Database = {
     };
     Views: { [_ in never]: never };
     Functions: {
-      is_beta_reader: {
+      is_allowed: {
         Args: never;
         Returns: boolean;
       };
