@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/* The approved mockup's look: deep blue accent, serif headlines, sans body,
+   white cards on a light grey ground. */
+@theme {
+  --font-sans: var(--font-public-sans), system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), Georgia, serif;
+
+  --color-ground: #f5f6f8;
+  --color-card: #ffffff;
+  --color-ink: #101828;
+  --color-ink-2: #344054;
+  --color-muted: #475467;
+  --color-subtle: #667085;
+  --color-line: #e4e7ec;
+  --color-line-soft: #f2f4f7;
+  --color-field: #d0d5dd;
+
+  --color-accent: #1f4fd1;
+  --color-accent-strong: #173c9e;
+  --color-accent-soft: #e8eefc;
+
+  --color-sample: #3538cd;
+  --color-sample-soft: #eef0ff;
+
+  --color-favorable: #0e5e59;
+  --color-neutral: #c9ced6;
+  --color-critical: #e8742e;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-ground);
+    color: var(--color-ink);
+  }
+  a {
+    color: var(--color-accent);
+  }
+  a:hover {
+    color: var(--color-accent-strong);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

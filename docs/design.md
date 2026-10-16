@@ -246,6 +246,30 @@ Pacific.
    and daily digest; candidate page; evals.
 4. **Tune.** A week of real reading, then adjust flags, sources and the model.
 
+**Step 1 as built (October 16, 2026).** Where the build fills in or departs
+from the plan above:
+
+- Screens: `/sign-in`, `/states`, `/ca`, `/ca/2026-11-03-general`,
+  `/ca/2026-11-03-general/governor` and one page per candidate, plus
+  `/account` (who is signed in, when the session ends, sign out).
+- Session expiry is enforced by the app, because Supabase's time-box and
+  inactivity settings are paid-plan features: 30 days from the sign-in time
+  in the signed access token, 7 days from a last-seen cookie. Either one
+  revokes the session at Supabase, not just in the browser.
+- The certified candidate list is not loaded yet: the build environment
+  can't reach the Secretary of State's site. The 12 races are seeded;
+  candidates go into `data/ca-2026-general.json` from the certified PDF and
+  are reviewed before they ship.
+- Demo mode (`npm run dev:demo`) shows the screens on the seed files with
+  fictional sample candidates, labeled as samples, so the UI can be built and
+  tested before any account exists. Production builds ignore it.
+- The database holds only what step 1 reads (states, elections, races,
+  candidates, profiles). News tables arrive with steps 2 and 3.
+- Supabase's newer key names: the publishable key in the web app, the secret
+  key only in the daily job. Account setup is in `docs/setup.md`.
+- Candidate cards show name, party and incumbency for now; the latest
+  headline and coverage balance arrive with step 3.
+
 ## Sources
 
 - California Secretary of State, certified candidate list for November 3,

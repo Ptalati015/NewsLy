@@ -28,20 +28,28 @@ with bias flags).
 | Tests | Vitest for units, Playwright for the six screens |
 | Lint and format | ESLint (next config) and Prettier; `npm run check` runs both plus `tsc` |
 
-The repository is empty of code until the first build step lands. Until a
-`package.json` exists, commands below are the intended ones, not working ones.
-
-## Commands (intended)
+## Commands
 
 ```
 npm install            # once; the cloud session hook runs this for you
-npm run dev            # web app on http://localhost:3000
-npm run check          # tsc + eslint + prettier --check
-npm test               # vitest
-npm run e2e            # playwright against a local dev server
+npm run dev            # web app on http://localhost:3000, needs .env.local
+npm run dev:demo       # same, on the seed files with sample candidates, no sign-in
+npm run check          # next typegen + tsc + eslint + prettier --check
+npm test               # vitest: units, seed files, database access rules (PGlite)
+npm run build          # production build; works with no keys at all
+npm run e2e            # playwright: demo screens + sign-in gate (run build first)
+npm run seed:sql       # regenerate supabase/seed.sql after editing data/
+```
+
+Not built yet (build step 2):
+
+```
 npm run job:daily      # the daily news run, reads .env
 npm run job:daily -- --date 2026-10-20 --dry-run   # no writes, no model calls
 ```
+
+In a cloud session, point Playwright at the preinstalled browser with
+`PW_CHROMIUM_PATH=/opt/pw-browsers/chromium npm run e2e`.
 
 ## Layout (planned)
 
@@ -70,7 +78,7 @@ docs/                design.md and any decision notes
    Every flag must carry a verbatim quote from the article. Never change the
    rubric without updating the design doc and bumping `prompt_version`.
 4. **Secrets stay out of git.** Real values live in `.env.local` (ignored),
-   Vercel project settings and GitHub Actions secrets. `SUPABASE_SERVICE_ROLE_KEY`
+   Vercel project settings and GitHub Actions secrets. `SUPABASE_SECRET_KEY`
    and model keys are server-only: never import them in a client component and
    never prefix them with `NEXT_PUBLIC_`.
 5. **Structured output, validated.** Model responses are requested as JSON
@@ -185,8 +193,10 @@ Model calls cost money; tests must not spend it.
 - The Vercel AI Gateway credit is prepaid, so the hard ceiling is what the owner
   has loaded. Keep the free monthly credit as the budget until the owner says
   otherwise.
-- Playwright runs against a seeded database with precomputed analyses, never
-  against live news or a model.
+- Playwright runs against demo mode (the seed files, sample candidates) and a
+  production build with placeholder Supabase settings, never against live
+  news, a model or a real account. Once analyses exist it uses precomputed
+  fixtures for them.
 
 ## Security basics (Next.js + Supabase)
 
@@ -195,10 +205,16 @@ Model calls cost money; tests must not spend it.
 - Sign-in is restricted to `ALLOWED_EMAILS` during the beta, checked server-side
   after the OAuth callback.
 - Sessions use HttpOnly cookies (`@supabase/ssr`, PKCE) with refresh-token
-  rotation, so you stay signed in. The app enforces expiry itself in
-  middleware: `SESSION_MAX_AGE_DAYS` (default 30) since sign-in and
-  `SESSION_IDLE_DAYS` (default 7) since last activity; past either, sign out
-  and return to the sign-in screen.
+  rotation, so you stay signed in. Supabase's own session limits are a paid
+  feature, so the app enforces expiry itself in `proxy.ts` (Next.js 16's name
+  for middleware): `SESSION_MAX_AGE_DAYS` (default 30) since sign-in, read
+  from the signed `amr` claim in the access token, and `SESSION_IDLE_DAYS`
+  (default 7) since last activity, tracked by the `nl_last_seen` cookie; past
+  either, the session is revoked at Supabase and the reader returns to the
+  sign-in screen. Pages check the same rules again (`lib/auth/viewer.ts`).
+- Form posts go to route handlers that refuse a missing or foreign `Origin`.
+- Demo mode (`NEWSLY_DEMO=1`) skips sign-in, so it only works under
+  `next dev`; production builds ignore it.
 - Server Actions and route handlers validate input with Zod and never trust
   route params for authorization.
 - Article HTML fetched by the job is parsed with a sanitizing extractor; raw
@@ -218,3 +234,13 @@ Model calls cost money; tests must not spend it.
 - Change the bias rubric, the flag names or the framing labels silently.
 - Skip, disable or quarantine a test to get CI green.
 - Reuse the daily-job service role key in the web app.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

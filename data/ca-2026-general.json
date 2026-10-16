@@ -1,0 +1,113 @@
+{
+  "source": {
+    "note": "Candidates are copied by hand from the Secretary of State's certified list and reviewed. Until that copy is made, each race has an empty candidate list.",
+    "certified_on": "2026-08-27",
+    "pdf": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+    "release": "https://www.sos.ca.gov/administration/news-releases-and-advisories/2026-news-releases-and-advisories/california-secretary-state-shirley-n-weber-phd-certifies-candidate-list-november-3-2026-general-election"
+  },
+  "election": {
+    "state_code": "CA",
+    "slug": "2026-11-03-general",
+    "name": "General Election",
+    "date": "2026-11-03",
+    "type": "general"
+  },
+  "races": [
+    {
+      "slug": "governor",
+      "office": "Governor",
+      "district": null,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "lieutenant-governor",
+      "office": "Lieutenant Governor",
+      "district": null,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "attorney-general",
+      "office": "Attorney General",
+      "district": null,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "secretary-of-state",
+      "office": "Secretary of State",
+      "district": null,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "treasurer",
+      "office": "Treasurer",
+      "district": null,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "controller",
+      "office": "Controller",
+      "district": null,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "insurance-commissioner",
+      "office": "Insurance Commissioner",
+      "district": null,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "superintendent-of-public-instruction",
+      "office": "Superintendent of Public Instruction",
+      "district": null,
+      "level": "statewide",
+      "partisan": false,
+      "candidates": []
+    },
+    {
+      "slug": "board-of-equalization-1",
+      "office": "Board of Equalization",
+      "district": 1,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "board-of-equalization-2",
+      "office": "Board of Equalization",
+      "district": 2,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "board-of-equalization-3",
+      "office": "Board of Equalization",
+      "district": 3,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    },
+    {
+      "slug": "board-of-equalization-4",
+      "office": "Board of Equalization",
+      "district": 4,
+      "level": "statewide",
+      "partisan": true,
+      "candidates": []
+    }
+  ]
+}

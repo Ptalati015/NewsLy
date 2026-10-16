@@ -1,0 +1,254 @@
+{
+  "states": [
+    {
+      "code": "AL",
+      "name": "Alabama",
+      "enabled": false
+    },
+    {
+      "code": "AK",
+      "name": "Alaska",
+      "enabled": false
+    },
+    {
+      "code": "AZ",
+      "name": "Arizona",
+      "enabled": false
+    },
+    {
+      "code": "AR",
+      "name": "Arkansas",
+      "enabled": false
+    },
+    {
+      "code": "CA",
+      "name": "California",
+      "enabled": true
+    },
+    {
+      "code": "CO",
+      "name": "Colorado",
+      "enabled": false
+    },
+    {
+      "code": "CT",
+      "name": "Connecticut",
+      "enabled": false
+    },
+    {
+      "code": "DE",
+      "name": "Delaware",
+      "enabled": false
+    },
+    {
+      "code": "FL",
+      "name": "Florida",
+      "enabled": false
+    },
+    {
+      "code": "GA",
+      "name": "Georgia",
+      "enabled": false
+    },
+    {
+      "code": "HI",
+      "name": "Hawaii",
+      "enabled": false
+    },
+    {
+      "code": "ID",
+      "name": "Idaho",
+      "enabled": false
+    },
+    {
+      "code": "IL",
+      "name": "Illinois",
+      "enabled": false
+    },
+    {
+      "code": "IN",
+      "name": "Indiana",
+      "enabled": false
+    },
+    {
+      "code": "IA",
+      "name": "Iowa",
+      "enabled": false
+    },
+    {
+      "code": "KS",
+      "name": "Kansas",
+      "enabled": false
+    },
+    {
+      "code": "KY",
+      "name": "Kentucky",
+      "enabled": false
+    },
+    {
+      "code": "LA",
+      "name": "Louisiana",
+      "enabled": false
+    },
+    {
+      "code": "ME",
+      "name": "Maine",
+      "enabled": false
+    },
+    {
+      "code": "MD",
+      "name": "Maryland",
+      "enabled": false
+    },
+    {
+      "code": "MA",
+      "name": "Massachusetts",
+      "enabled": false
+    },
+    {
+      "code": "MI",
+      "name": "Michigan",
+      "enabled": false
+    },
+    {
+      "code": "MN",
+      "name": "Minnesota",
+      "enabled": false
+    },
+    {
+      "code": "MS",
+      "name": "Mississippi",
+      "enabled": false
+    },
+    {
+      "code": "MO",
+      "name": "Missouri",
+      "enabled": false
+    },
+    {
+      "code": "MT",
+      "name": "Montana",
+      "enabled": false
+    },
+    {
+      "code": "NE",
+      "name": "Nebraska",
+      "enabled": false
+    },
+    {
+      "code": "NV",
+      "name": "Nevada",
+      "enabled": false
+    },
+    {
+      "code": "NH",
+      "name": "New Hampshire",
+      "enabled": false
+    },
+    {
+      "code": "NJ",
+      "name": "New Jersey",
+      "enabled": false
+    },
+    {
+      "code": "NM",
+      "name": "New Mexico",
+      "enabled": false
+    },
+    {
+      "code": "NY",
+      "name": "New York",
+      "enabled": false
+    },
+    {
+      "code": "NC",
+      "name": "North Carolina",
+      "enabled": false
+    },
+    {
+      "code": "ND",
+      "name": "North Dakota",
+      "enabled": false
+    },
+    {
+      "code": "OH",
+      "name": "Ohio",
+      "enabled": false
+    },
+    {
+      "code": "OK",
+      "name": "Oklahoma",
+      "enabled": false
+    },
+    {
+      "code": "OR",
+      "name": "Oregon",
+      "enabled": false
+    },
+    {
+      "code": "PA",
+      "name": "Pennsylvania",
+      "enabled": false
+    },
+    {
+      "code": "RI",
+      "name": "Rhode Island",
+      "enabled": false
+    },
+    {
+      "code": "SC",
+      "name": "South Carolina",
+      "enabled": false
+    },
+    {
+      "code": "SD",
+      "name": "South Dakota",
+      "enabled": false
+    },
+    {
+      "code": "TN",
+      "name": "Tennessee",
+      "enabled": false
+    },
+    {
+      "code": "TX",
+      "name": "Texas",
+      "enabled": false
+    },
+    {
+      "code": "UT",
+      "name": "Utah",
+      "enabled": false
+    },
+    {
+      "code": "VT",
+      "name": "Vermont",
+      "enabled": false
+    },
+    {
+      "code": "VA",
+      "name": "Virginia",
+      "enabled": false
+    },
+    {
+      "code": "WA",
+      "name": "Washington",
+      "enabled": false
+    },
+    {
+      "code": "WV",
+      "name": "West Virginia",
+      "enabled": false
+    },
+    {
+      "code": "WI",
+      "name": "Wisconsin",
+      "enabled": false
+    },
+    {
+      "code": "WY",
+      "name": "Wyoming",
+      "enabled": false
+    }
+  ]
+}
