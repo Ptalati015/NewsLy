@@ -1,0 +1,41 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next.js
+.next/
+out/
+.vercel
+
+# build and cache
+dist/
+*.tsbuildinfo
+.turbo/
+.eslintcache
+
+# environment and secrets (never commit real keys)
+.env
+.env.*
+!.env.example
+
+# logs and OS files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# editor
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# test and coverage
+coverage/
+playwright-report/
+test-results/
+
+# local scratch
+tmp/
+*.local
