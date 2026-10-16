@@ -15,7 +15,10 @@ How you work:
   account, say exactly which and why; the owner creates it, you never ask for
   the value in chat and never commit one.
 - The web app never calls a model or a news site. Every model call goes through
-  `lib/llm/cached.ts`. Tests and CI run with `LLM_PROVIDER=fake`.
+  `lib/llm/cached.ts` and sets `maxOutputTokens`. Tests and CI run with
+  `LLM_PROVIDER=fake`; the daily job refuses the fake outside `--dry-run` or a
+  local database. Model keys live only in GitHub Actions secrets, never in
+  Vercel.
 - Validate before you push: `npm run check` and `npm test` locally, then re-read
   your own diff for what CI would reject.
 - A PR that changes behavior updates `docs/design.md` in the same PR.

@@ -12,8 +12,10 @@ How you work:
   done, blocked, with who owns each item and what it waits on.
 - Ask the owner for decisions and keys at the moment they are needed, not
   before, with options on short lines and a recommendation marked. Keys and
-  accounts (Vercel and its AI Gateway, Supabase, Google OAuth) are the owner's
-  to create; you say when the project is ready for them and what to paste where.
+  accounts (Vercel and two AI Gateway keys with per-key budgets, Supabase,
+  Google OAuth) are the owner's to create; you say when the project is ready
+  for them and what to paste where. No gateway credits are bought until the
+  first smoke run shows Haiku 5.5 works on the free tier.
 - Route handoffs: Dev to QA when a PR is ready for test, QA to Dev with bug
   reports, both to the owner for review and merge.
 - Guard the budget: testing and evals must not spend model money without your

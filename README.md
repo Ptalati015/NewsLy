@@ -42,7 +42,7 @@ dollars a month at this volume.
 Nothing to run yet. Once the first build step lands:
 
 ```
-cp .env.example .env.local     # fill in Supabase and one model key
+cp .env.example .env.local     # Supabase values; the fake model provider is the default
 npm install
 npm run dev                    # http://localhost:3000
 npm run job:daily -- --dry-run # the news run without writes or model calls
@@ -54,7 +54,8 @@ npm run job:daily -- --dry-run # the news run without writes or model calls
 app/          Next.js routes          jobs/daily/   the news run
 components/   UI, one folder a screen supabase/     migrations and seed
 lib/llm/      prompts, schemas, cache data/         candidates, feeds, outlet lean
-evals/        labeled articles        docs/         design.md
+tests/        fixtures and unit tests evals/        article URLs, labels, quotes
+docs/         design.md, testing.md
 ```
 
 ## Credits
