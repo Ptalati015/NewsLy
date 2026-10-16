@@ -68,17 +68,24 @@ Restore in the Supabase dashboard if it pauses.
      (default 7)
 3. Deploy and note the production address, for example
    `https://newsly-abc.vercel.app`. Every pull request also gets its own
-   preview address.
+   preview address, but sign-in only works on the production address (see
+   section 4).
 
 ## 4. Tell Supabase where the website lives
 
 In Supabase, Authentication > URL Configuration:
 
-- Site URL: the production address from step 3.
-- Redirect URLs, one per line:
-  - `https://<production address>/auth/callback`
-  - `https://*-<your-vercel-team-slug>.vercel.app/**` (pull request previews)
+- Site URL: the production address from section 3.
+- Redirect URLs, one per line, and nothing else:
+  - `https://<production address>/**`
   - `http://localhost:3000/**` (local development)
+
+Don't add a wildcard for pull request previews, such as
+`https://*-<team>.vercel.app/**`. Anyone can create a Vercel project whose
+address matches it, and a sign-in link could then hand your session to their
+site. The `/**` above is safe because it stays on your own address. On a
+preview, Continue with Google ends up on the production address without
+signing you in, so do sign-in checks on production.
 
 ## 5. Try it
 

@@ -1,4 +1,5 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+import { SERVER_KEY_SENTINELS } from "./sentinels";
 
 // Every visible link and button must be at least 44 px tall (the design's
 // phone-first rule). Inline text links inside paragraphs are exempt.
@@ -29,9 +30,43 @@ export async function expectNoSideScroll(page: Page) {
   expect(overflow).toBeLessThanOrEqual(0);
 }
 
+// Phone screenshots go in test-results/screens/, others in a folder named
+// after the Playwright project.
 export async function snap(page: Page, name: string) {
+  const project = test.info().project.name;
+  const folder = project === "demo" ? "" : `${project}/`;
   await page.screenshot({
-    path: `test-results/screens/${name}.png`,
+    path: `test-results/screens/${folder}${name}.png`,
     fullPage: true,
   });
+}
+
+// Opens each path and reads every response the page loads from the app
+// (HTML, the React payload, scripts, styles), failing if any of them
+// contains a server-only key.
+export async function expectNoServerKeysServed(page: Page, paths: string[]) {
+  const sentinels = Object.values(SERVER_KEY_SENTINELS);
+  const appOrigin = new URL(test.info().project.use.baseURL ?? "").origin;
+  const leaks: string[] = [];
+  const reads: Promise<void>[] = [];
+  page.on("response", (response) => {
+    if (new URL(response.url()).origin !== appOrigin) return;
+    reads.push(
+      response
+        .text()
+        .then((body) => {
+          for (const sentinel of sentinels)
+            if (body.includes(sentinel)) leaks.push(response.url());
+        })
+        // Redirects and aborted requests have no body to read.
+        .catch(() => undefined),
+    );
+  });
+  for (const path of paths) {
+    await page.goto(path);
+    await page.waitForLoadState("networkidle");
+  }
+  await Promise.all(reads);
+  expect(reads.length).toBeGreaterThan(paths.length);
+  expect(leaks).toEqual([]);
 }

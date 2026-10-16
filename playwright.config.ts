@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { SERVER_KEY_SENTINELS } from "./e2e/sentinels";
 
 // Two servers, neither of which touches a real service or model:
 // - demo: `next dev` in demo mode (seed files, sample candidates, no sign-in)
@@ -30,6 +31,18 @@ export default defineConfig({
       use: { baseURL: `http://127.0.0.1:${DEMO_PORT}` },
     },
     {
+      // The same screens on a laptop: a centered column, still no sideways
+      // scrolling and the same touch targets.
+      name: "demo-desktop",
+      testMatch: /demo\..*spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1280, height: 800 },
+        baseURL: `http://127.0.0.1:${DEMO_PORT}`,
+        launchOptions: { executablePath },
+      },
+    },
+    {
       name: "gate",
       testMatch: /gate\..*spec\.ts/,
       use: { baseURL: `http://127.0.0.1:${GATE_PORT}` },
@@ -45,6 +58,7 @@ export default defineConfig({
         NEWSLY_DEMO: "1",
         NEWSLY_NOW: "2026-10-20T12:00:00-07:00",
         LLM_PROVIDER: "fake",
+        ...SERVER_KEY_SENTINELS,
       },
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
@@ -58,6 +72,7 @@ export default defineConfig({
         NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "sb_publishable_placeholder",
         ALLOWED_EMAILS: "reader@example.com",
         LLM_PROVIDER: "fake",
+        ...SERVER_KEY_SENTINELS,
       },
       // Always a fresh server, so a stale build is never tested.
       reuseExistingServer: false,
