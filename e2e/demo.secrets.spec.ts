@@ -11,7 +11,7 @@ test("serves no server-only key on any screen", async ({ page }) => {
     "/ca",
     "/ca/2026-11-03-general",
     "/ca/2026-11-03-general/governor",
-    "/ca/2026-11-03-general/governor/alex-rivera",
+    "/ca/2026-11-03-general/governor/xavier-becerra",
     "/account",
     "/tx",
   ]);

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { CandidateAvatar } from "@/components/shared/avatar";
 import { ChevronRight } from "@/components/shared/icons";
-import { Note, PageTitle, SampleBadge } from "@/components/shared/page-title";
+import { Note, PageTitle } from "@/components/shared/page-title";
 import { ScreenSkeleton } from "@/components/shared/skeleton";
 import { TopBar } from "@/components/shared/top-bar";
 import { getRepo } from "@/lib/auth/viewer";
@@ -37,7 +37,6 @@ async function Candidates({ params }: { params: Params }) {
   const election = await loadElection(repo, state, p.election);
   const race = await loadRace(repo, election, p.race);
   const candidates = await repo.listCandidates(race.id);
-  const sample = candidates.some((c) => c.sample);
 
   return (
     <main className="pb-10">
@@ -45,11 +44,7 @@ async function Candidates({ params }: { params: Params }) {
       <PageTitle
         title={raceTitle(race)}
         subtitle={`${election.name} · ${formatElectionDate(election.date, "short")}`}
-      >
-        {sample ? (
-          <SampleBadge>Sample candidates, not the real ballot</SampleBadge>
-        ) : null}
-      </PageTitle>
+      />
       {candidates.length === 0 ? (
         <Note>
           The certified candidate list for this race hasn&apos;t been loaded

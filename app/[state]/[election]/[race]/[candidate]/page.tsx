@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { CandidateAvatar } from "@/components/shared/avatar";
-import { SampleBadge } from "@/components/shared/page-title";
 import { ScreenSkeleton } from "@/components/shared/skeleton";
 import { TopBar } from "@/components/shared/top-bar";
 import { getRepo } from "@/lib/auth/viewer";
@@ -54,9 +53,6 @@ async function Candidate({ params }: { params: Props["params"] }) {
         </div>
       </div>
       <div className="flex flex-wrap gap-2 px-4 pt-3">
-        {candidate.sample ? (
-          <SampleBadge>Sample candidate, not a real person</SampleBadge>
-        ) : null}
         {candidate.incumbent ? (
           <span className="mt-1 rounded-md bg-accent-soft px-2 py-1 text-xs font-semibold text-accent">
             Incumbent

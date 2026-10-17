@@ -51,13 +51,7 @@ export const electionFileSchema = z.object({
   races: z.array(raceSeedSchema),
 });
 
-export const sampleCandidatesFileSchema = z.object({
-  note: z.string(),
-  races: z.record(slugSchema, z.array(candidateSeedSchema)),
-});
-
 export type StatesFile = z.infer<typeof statesFileSchema>;
 export type ElectionFile = z.infer<typeof electionFileSchema>;
 export type RaceSeed = z.infer<typeof raceSeedSchema>;
 export type CandidateSeed = z.infer<typeof candidateSeedSchema>;
-export type SampleCandidatesFile = z.infer<typeof sampleCandidatesFileSchema>;

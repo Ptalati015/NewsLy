@@ -10,7 +10,7 @@ const SCREENS = [
   ["elections", "/ca"],
   ["races", "/ca/2026-11-03-general"],
   ["candidates", "/ca/2026-11-03-general/governor"],
-  ["candidate", "/ca/2026-11-03-general/governor/alex-rivera"],
+  ["candidate", "/ca/2026-11-03-general/governor/xavier-becerra"],
   ["account", "/account"],
   ["state not open yet", "/tx"],
   ["page not found", "/ca/1999-01-01-nothing"],

@@ -272,13 +272,16 @@ from the plan above:
   inactivity settings are paid-plan features: 30 days from the sign-in time
   in the signed access token, 7 days from a last-seen cookie. Either one
   revokes the session at Supabase, not just in the browser.
-- The certified candidate list is not loaded yet: the build environment
-  can't reach the Secretary of State's site. The 12 races are seeded;
-  candidates go into `data/ca-2026-general.json` from the certified PDF and
-  are reviewed before they ship.
-- Demo mode (`npm run dev:demo`) shows the screens on the seed files with
-  fictional sample candidates, labeled as samples, so the UI can be built and
-  tested before any account exists. Production builds ignore it.
+- Candidates: the 24 people in the 12 statewide races, copied from the
+  Secretary of State's certified list (certified August 27, 2026) in
+  `data/ca-2026-general.json` and checked against the PDF on October 17,
+  2026: name and ballot designation as printed, party (none in the
+  nonpartisan Superintendent race), and incumbency from the list's asterisk.
+  Each candidate's news search uses the name as stories print it (the
+  ballot's nickname, no middle initials) plus the office.
+- Demo mode (`npm run dev:demo`) shows the screens on the seed files, so the
+  UI can be built and tested before any account exists. Production builds
+  ignore it.
 - The app reads the time only through `lib/clock.ts`. In demo mode
   `NEWSLY_NOW` pins it, so the browser tests run on October 20, 2026 (14 days
   before the election); production always uses the real time.

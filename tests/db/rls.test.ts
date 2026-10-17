@@ -74,7 +74,7 @@ afterAll(async () => {
 });
 
 describe("seed", () => {
-  it("loads 50 states and the 12 California races, and is safe to re-run", async () => {
+  it("loads 50 states, the 12 California races and their 24 candidates, and is safe to re-run", async () => {
     await db.exec(read("supabase/seed.sql"));
     const states = await db.query<{ n: number }>(
       "select count(*)::int as n from public.states",
@@ -82,8 +82,12 @@ describe("seed", () => {
     const races = await db.query<{ n: number }>(
       "select count(*)::int as n from public.races",
     );
+    const candidates = await db.query<{ n: number }>(
+      "select count(*)::int as n from public.candidates",
+    );
     expect(states.rows[0]?.n).toBe(50);
     expect(races.rows[0]?.n).toBe(12);
+    expect(candidates.rows[0]?.n).toBe(24);
   });
 });
 

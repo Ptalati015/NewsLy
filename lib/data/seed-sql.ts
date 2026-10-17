@@ -25,11 +25,24 @@ export function raceLabel(race: Pick<RaceSeed, "office" | "district">): string {
     : `${race.office}, District ${race.district}`;
 }
 
+// The name as news stories usually print it: the ballot's nickname in
+// parentheses replaces the first name, and middle initials are dropped.
+// "Donald P. (Don) Wagner" becomes "Don Wagner".
+export function newsName(ballotName: string): string {
+  const nickname = /\(([^)]+)\)/.exec(ballotName)?.[1]?.trim();
+  const words = ballotName
+    .replace(/\([^)]*\)/g, " ")
+    .split(/\s+/)
+    .filter((word) => word && !/^[A-Z]\.?$/.test(word));
+  if (nickname && words.length > 1) words[0] = nickname;
+  return words.join(" ");
+}
+
 export function searchTerms(
   candidate: Pick<CandidateSeed, "name">,
   race: Pick<RaceSeed, "office" | "district">,
 ): string[] {
-  return [`"${candidate.name}" ${raceLabel(race)}`];
+  return [`"${newsName(candidate.name)}" ${raceLabel(race)}`];
 }
 
 export function buildSeedSql(
@@ -81,10 +94,7 @@ export function buildSeedSql(
       ),
     );
     if (rows.length === 0) {
-      out.push(
-        "",
-        "-- No candidates yet: the certified list hasn't been copied in.",
-      );
+      out.push("", "-- No candidates in this election's seed file yet.");
       continue;
     }
     out.push(

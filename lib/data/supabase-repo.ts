@@ -42,7 +42,6 @@ const toCandidate = (row: Tables["candidates"]["Row"]): Candidate => ({
   party: row.party,
   ballotDesignation: row.ballot_designation,
   incumbent: row.incumbent,
-  sample: false,
 });
 
 const RACE_COLUMNS =

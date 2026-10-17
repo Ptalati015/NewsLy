@@ -67,8 +67,8 @@ function SignInActions({
       ) : null}
       {demo ? (
         <>
-          <p className="rounded-xl border border-line bg-sample-soft px-4 py-3 text-[15px] leading-[22px] text-sample">
-            Demo mode: no sign-in, sample candidates.
+          <p className="rounded-xl border border-line bg-demo-soft px-4 py-3 text-[15px] leading-[22px] text-demo">
+            Demo mode: no sign-in, data from the seed files.
           </p>
           <Link href="/states" className={buttonClass}>
             Open the demo

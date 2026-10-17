@@ -1,4 +1,4 @@
-// The six screens in demo mode (seed files, sample candidates), at phone size.
+// The six screens in demo mode (the seed files), at phone and laptop size.
 
 import { expect, test } from "@playwright/test";
 import { expectNoSideScroll, expectTouchTargets, snap } from "./helpers";
@@ -64,24 +64,24 @@ test("walks from the state picker to a candidate page", async ({ page }) => {
 
   await page.getByRole("link", { name: /^Governor/ }).click();
   await expect(page).toHaveURL(/\/governor$/);
-  await expect(
-    page.getByText("Sample candidates, not the real ballot"),
-  ).toBeVisible();
   const cards = page.getByRole("main").getByRole("listitem");
   await expect(cards).toHaveCount(2);
+  await expect(cards.first()).toContainText("Xavier Becerra");
+  await expect(cards.last()).toContainText("Steve Hilton");
   await expectTouchTargets(page);
   await expectNoSideScroll(page);
   await snap(page, "05-candidates");
 
   await cards.first().getByRole("link").click();
+  await expect(page).toHaveURL(/\/governor\/xavier-becerra$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Alex Rivera",
+    "Xavier Becerra",
   );
   await expect(
     page.getByText("Democratic Party · running for Governor"),
   ).toBeVisible();
   await expect(
-    page.getByText("Sample candidate, not a real person"),
+    page.getByText("On the ballot as: Voting Rights Attorney"),
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: "This week" })).toBeVisible();
   await expectTouchTargets(page);
@@ -108,12 +108,17 @@ test("filters the state list", async ({ page }) => {
   await expect(page.getByText("No state matches")).toBeVisible();
 });
 
-test("shows the district races with sample people", async ({ page }) => {
+test("shows a district race and its incumbent", async ({ page }) => {
   await page.goto("/ca/2026-11-03-general/board-of-equalization-2");
   await expect(
     page.getByRole("heading", { name: "Board of Equalization, District 2" }),
   ).toBeVisible();
-  await expect(page.getByRole("main").getByRole("listitem")).toHaveCount(2);
+  const cards = page.getByRole("main").getByRole("listitem");
+  await expect(cards).toHaveCount(2);
+  await expect(cards.first()).toContainText("Sally J. Lieber");
+  await expect(cards.first()).toContainText("Incumbent");
+  await expect(cards.last()).toContainText("John Pimentel");
+  await expect(cards.last()).not.toContainText("Incumbent");
 });
 
 test("says when a state isn't open yet, and 404s on bad links", async ({

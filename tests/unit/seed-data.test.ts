@@ -1,11 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import {
-  electionFiles,
-  sampleCandidatesFile,
-  statesFile,
-} from "@/lib/data/seed-files";
-import { buildSeedSql } from "@/lib/data/seed-sql";
+import { electionFiles, statesFile } from "@/lib/data/seed-files";
+import { buildSeedSql, newsName, searchTerms } from "@/lib/data/seed-sql";
 import { createSeedRepo } from "@/lib/data/seed-repo";
 
 const unique = (values: string[]) => new Set(values).size === values.length;
@@ -49,12 +45,36 @@ describe("seed files", () => {
     }
   });
 
-  it("keep sample people to races that exist", () => {
-    const slugs = new Set(
-      electionFiles.flatMap((f) => f.races.map((r) => r.slug)),
-    );
-    for (const raceSlug of Object.keys(sampleCandidatesFile.races)) {
-      expect(slugs.has(raceSlug), raceSlug).toBe(true);
+  it("hold the certified list: two candidates a race, four incumbents", () => {
+    // From the Secretary of State's certified list of August 27, 2026, checked
+    // against the PDF on October 17, 2026. Spot checks, not a second copy.
+    const [ca] = electionFiles;
+    const races = ca?.races ?? [];
+    expect(races.every((r) => r.candidates.length === 2)).toBe(true);
+    const names = (slug: string) =>
+      races.find((r) => r.slug === slug)?.candidates.map((c) => c.name);
+    expect(names("governor")).toEqual(["Xavier Becerra", "Steve Hilton"]);
+    expect(names("board-of-equalization-4")).toEqual([
+      "Tom Umberg",
+      "Denis Bilodeau",
+    ]);
+    expect(
+      races
+        .flatMap((r) => r.candidates.filter((c) => c.incumbent))
+        .map((c) => c.name),
+    ).toEqual([
+      "Rob Bonta",
+      "Shirley N. Weber",
+      "Malia M. Cohen",
+      "Sally J. Lieber",
+    ]);
+  });
+
+  it("leave party empty in nonpartisan races and set it everywhere else", () => {
+    for (const race of electionFiles.flatMap((f) => f.races)) {
+      for (const c of race.candidates) {
+        expect(c.party === null, `${race.slug}/${c.slug}`).toBe(!race.partisan);
+      }
     }
   });
 
@@ -77,12 +97,31 @@ describe("seed repo (demo mode)", () => {
     const governor = await repo.getRace(election!.id, "governor");
     expect(governor?.candidateCount).toBeGreaterThan(0);
     const people = await repo.listCandidates(governor!.id);
-    expect(people.length).toBe(governor!.candidateCount);
-    // No real candidates are loaded yet, so these are the marked samples.
-    expect(people.every((p) => p.sample)).toBe(true);
+    expect(people.map((p) => p.name)).toEqual([
+      "Xavier Becerra",
+      "Steve Hilton",
+    ]);
     expect(await repo.getCandidate(governor!.id, people[0]!.slug)).toEqual(
       people[0],
     );
     expect(await repo.getCandidate(governor!.id, "nobody")).toBeNull();
+  });
+});
+
+describe("news search terms", () => {
+  it("use the name as stories print it", () => {
+    expect(newsName("Donald P. (Don) Wagner")).toBe("Don Wagner");
+    expect(newsName("Shirley N. Weber")).toBe("Shirley Weber");
+    expect(newsName("Herb W Morgan")).toBe("Herb Morgan");
+    expect(newsName("Eleni Kounalakis")).toBe("Eleni Kounalakis");
+  });
+
+  it("pair the quoted name with the office", () => {
+    expect(
+      searchTerms(
+        { name: "Sally J. Lieber" },
+        { office: "Board of Equalization", district: 2 },
+      ),
+    ).toEqual(['"Sally Lieber" Board of Equalization, District 2']);
   });
 });

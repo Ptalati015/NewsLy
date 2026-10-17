@@ -81,4 +81,39 @@ on conflict (election_id, slug) do update set office = excluded.office,
   district = excluded.district, level = excluded.level,
   partisan = excluded.partisan, sort_order = excluded.sort_order;
 
--- No candidates yet: the certified list hasn't been copied in.
+insert into public.candidates (race_id, slug, name, party, ballot_designation, incumbent, search_terms, sort_order)
+select r.id, v.slug, v.name, v.party, v.ballot_designation, v.incumbent, v.search_terms, v.sort_order
+from public.races r
+join public.elections e on e.id = r.election_id
+join (values
+  ('governor', 'xavier-becerra', 'Xavier Becerra', 'Democratic', 'Voting Rights Attorney', false, array['"Xavier Becerra" Governor']::text[], 1),
+  ('governor', 'steve-hilton', 'Steve Hilton', 'Republican', 'Small Business Owner', false, array['"Steve Hilton" Governor']::text[], 2),
+  ('lieutenant-governor', 'fiona-ma', 'Fiona Ma', 'Democratic', 'State Treasurer/CPA', false, array['"Fiona Ma" Lieutenant Governor']::text[], 1),
+  ('lieutenant-governor', 'gloria-romero', 'Gloria Romero', 'Republican', 'Educator/Businesswoman', false, array['"Gloria Romero" Lieutenant Governor']::text[], 2),
+  ('attorney-general', 'rob-bonta', 'Rob Bonta', 'Democratic', 'California Attorney General', true, array['"Rob Bonta" Attorney General']::text[], 1),
+  ('attorney-general', 'michael-gates', 'Michael E. Gates', 'Republican', 'Deputy United States Attorney', false, array['"Michael Gates" Attorney General']::text[], 2),
+  ('secretary-of-state', 'shirley-weber', 'Shirley N. Weber', 'Democratic', 'California Secretary of State', true, array['"Shirley Weber" Secretary of State']::text[], 1),
+  ('secretary-of-state', 'don-wagner', 'Donald P. (Don) Wagner', 'Republican', 'Orange County Supervisor', false, array['"Don Wagner" Secretary of State']::text[], 2),
+  ('treasurer', 'eleni-kounalakis', 'Eleni Kounalakis', 'Democratic', 'Lieutenant Governor of California', false, array['"Eleni Kounalakis" Treasurer']::text[], 1),
+  ('treasurer', 'jennifer-hawks', 'Jennifer Hawks', 'Republican', 'Retired Business Executive', false, array['"Jennifer Hawks" Treasurer']::text[], 2),
+  ('controller', 'malia-cohen', 'Malia M. Cohen', 'Democratic', 'State Controller/Mother', true, array['"Malia Cohen" Controller']::text[], 1),
+  ('controller', 'herb-morgan', 'Herb W Morgan', 'Republican', 'Chief Investment Officer', false, array['"Herb Morgan" Controller']::text[], 2),
+  ('insurance-commissioner', 'ben-allen', 'Ben Allen', 'Democratic', 'California State Senator', false, array['"Ben Allen" Insurance Commissioner']::text[], 1),
+  ('insurance-commissioner', 'jane-kim', 'Jane Kim', 'Democratic', 'Attorney/Consumer Advocate', false, array['"Jane Kim" Insurance Commissioner']::text[], 2),
+  ('superintendent-of-public-instruction', 'richard-barrera', 'Richard Barrera', null, 'State Superintendent Advisor', false, array['"Richard Barrera" Superintendent of Public Instruction']::text[], 1),
+  ('superintendent-of-public-instruction', 'sonja-shaw', 'Sonja Shaw', null, 'School District President', false, array['"Sonja Shaw" Superintendent of Public Instruction']::text[], 2),
+  ('board-of-equalization-1', 'nelson-esparza', 'Nelson Esparza', 'Democratic', 'Teacher/Economist/Councilmember', false, array['"Nelson Esparza" Board of Equalization, District 1']::text[], 1),
+  ('board-of-equalization-1', 'shannon-grove', 'Shannon Grove', 'Republican', 'State Senator/Businesswoman', false, array['"Shannon Grove" Board of Equalization, District 1']::text[], 2),
+  ('board-of-equalization-2', 'sally-lieber', 'Sally J. Lieber', 'Democratic', 'Incumbent', true, array['"Sally Lieber" Board of Equalization, District 2']::text[], 1),
+  ('board-of-equalization-2', 'john-pimentel', 'John Pimentel', 'Democratic', 'Member, Board of Trustees, San Mateo County Community College District', false, array['"John Pimentel" Board of Equalization, District 2']::text[], 2),
+  ('board-of-equalization-3', 'mike-gipson', 'Mike Gipson', 'Democratic', 'State Assemblymember/Father', false, array['"Mike Gipson" Board of Equalization, District 3']::text[], 1),
+  ('board-of-equalization-3', 'samuel-sukaton', 'Samuel P. Sukaton', 'Democratic', 'Labor Union Organizer', false, array['"Samuel Sukaton" Board of Equalization, District 3']::text[], 2),
+  ('board-of-equalization-4', 'tom-umberg', 'Tom Umberg', 'Democratic', 'Small Businessman/Senator', false, array['"Tom Umberg" Board of Equalization, District 4']::text[], 1),
+  ('board-of-equalization-4', 'denis-bilodeau', 'Denis Bilodeau', 'Republican', 'Councilmember/Civil Engineer', false, array['"Denis Bilodeau" Board of Equalization, District 4']::text[], 2)
+) as v (race_slug, slug, name, party, ballot_designation, incumbent, search_terms, sort_order)
+  on v.race_slug = r.slug
+where e.state_code = 'CA' and e.slug = '2026-11-03-general'
+on conflict (race_id, slug) do update set name = excluded.name,
+  party = excluded.party, ballot_designation = excluded.ballot_designation,
+  incumbent = excluded.incumbent, search_terms = excluded.search_terms,
+  sort_order = excluded.sort_order;

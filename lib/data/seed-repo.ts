@@ -1,13 +1,8 @@
 // Reads the seed files in data/ instead of the database. Used by demo mode
-// (and tests) so the screens work before Supabase exists. A race with no
-// certified candidates yet shows the fictional sample people, marked as such.
+// (and tests) so the screens work before Supabase exists.
 
 import type { ElectionFile } from "./seed-schema.ts";
-import {
-  electionFiles,
-  sampleCandidatesFile,
-  statesFile,
-} from "./seed-files.ts";
+import { electionFiles, statesFile } from "./seed-files.ts";
 import type { Candidate, Election, NewsRepo, Race, UsState } from "./types.ts";
 
 const electionId = (file: ElectionFile) =>
@@ -33,22 +28,15 @@ function racesOf(file: ElectionFile): Race[] {
     district: race.district,
     level: race.level,
     partisan: race.partisan,
-    candidateCount:
-      race.candidates.length > 0
-        ? race.candidates.length
-        : (sampleCandidatesFile.races[race.slug]?.length ?? 0),
+    candidateCount: race.candidates.length,
   }));
 }
 
 function candidatesOf(file: ElectionFile, raceSlug: string): Candidate[] {
   const race = file.races.find((r) => r.slug === raceSlug);
   if (!race) return [];
-  const sample = race.candidates.length === 0;
-  const people = sample
-    ? (sampleCandidatesFile.races[raceSlug] ?? [])
-    : race.candidates;
   const raceId = `${electionId(file)}/${raceSlug}`;
-  return people.map((c) => ({
+  return race.candidates.map((c) => ({
     id: `${raceId}/${c.slug}`,
     raceId,
     slug: c.slug,
@@ -56,7 +44,6 @@ function candidatesOf(file: ElectionFile, raceSlug: string): Candidate[] {
     party: c.party,
     ballotDesignation: c.ballot_designation,
     incumbent: c.incumbent,
-    sample,
   }));
 }
 

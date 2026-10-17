@@ -28,14 +28,6 @@ export function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function SampleBadge({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="mt-1 self-start rounded-md bg-sample-soft px-2 py-1 text-xs font-semibold text-sample">
-      {children}
-    </span>
-  );
-}
-
 export function Note({ children }: { children: React.ReactNode }) {
   return (
     <p className="mx-4 mt-4 text-[13px] leading-5 text-muted">{children}</p>

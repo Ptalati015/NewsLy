@@ -6,7 +6,7 @@ here costs money: Supabase, Google Cloud and Vercel are all used on free
 plans, and no model key is needed until build step 3.
 
 Until these exist, the app still runs locally in demo mode
-(`npm run dev:demo`), with sample candidates and no sign-in.
+(`npm run dev:demo`), on the seed files and with no sign-in.
 
 ## What you will end up with
 

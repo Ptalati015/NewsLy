@@ -35,9 +35,6 @@ export type Candidate = {
   party: string | null;
   ballotDesignation: string | null;
   incumbent: boolean;
-  // True for the fictional people demo mode shows before the certified list
-  // is loaded. Never true for data from the database.
-  sample: boolean;
 };
 
 export interface NewsRepo {

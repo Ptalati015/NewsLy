@@ -1,6 +1,6 @@
 {
   "source": {
-    "note": "Candidates are copied by hand from the Secretary of State's certified list and reviewed. Until that copy is made, each race has an empty candidate list.",
+    "note": "Candidates copied from the Secretary of State's certified list (certified August 27, 2026), in the list's order, and checked against the PDF on October 17, 2026. Party is null in nonpartisan races; incumbent follows the list's asterisk.",
     "certified_on": "2026-08-27",
     "pdf": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
     "release": "https://www.sos.ca.gov/administration/news-releases-and-advisories/2026-news-releases-and-advisories/california-secretary-state-shirley-n-weber-phd-certifies-candidate-list-november-3-2026-general-election"
@@ -19,7 +19,22 @@
       "district": null,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "xavier-becerra",
+          "name": "Xavier Becerra",
+          "party": "Democratic",
+          "ballot_designation": "Voting Rights Attorney",
+          "incumbent": false
+        },
+        {
+          "slug": "steve-hilton",
+          "name": "Steve Hilton",
+          "party": "Republican",
+          "ballot_designation": "Small Business Owner",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "lieutenant-governor",
@@ -27,7 +42,22 @@
       "district": null,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "fiona-ma",
+          "name": "Fiona Ma",
+          "party": "Democratic",
+          "ballot_designation": "State Treasurer/CPA",
+          "incumbent": false
+        },
+        {
+          "slug": "gloria-romero",
+          "name": "Gloria Romero",
+          "party": "Republican",
+          "ballot_designation": "Educator/Businesswoman",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "attorney-general",
@@ -35,7 +65,22 @@
       "district": null,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "rob-bonta",
+          "name": "Rob Bonta",
+          "party": "Democratic",
+          "ballot_designation": "California Attorney General",
+          "incumbent": true
+        },
+        {
+          "slug": "michael-gates",
+          "name": "Michael E. Gates",
+          "party": "Republican",
+          "ballot_designation": "Deputy United States Attorney",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "secretary-of-state",
@@ -43,7 +88,22 @@
       "district": null,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "shirley-weber",
+          "name": "Shirley N. Weber",
+          "party": "Democratic",
+          "ballot_designation": "California Secretary of State",
+          "incumbent": true
+        },
+        {
+          "slug": "don-wagner",
+          "name": "Donald P. (Don) Wagner",
+          "party": "Republican",
+          "ballot_designation": "Orange County Supervisor",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "treasurer",
@@ -51,7 +111,22 @@
       "district": null,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "eleni-kounalakis",
+          "name": "Eleni Kounalakis",
+          "party": "Democratic",
+          "ballot_designation": "Lieutenant Governor of California",
+          "incumbent": false
+        },
+        {
+          "slug": "jennifer-hawks",
+          "name": "Jennifer Hawks",
+          "party": "Republican",
+          "ballot_designation": "Retired Business Executive",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "controller",
@@ -59,7 +134,22 @@
       "district": null,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "malia-cohen",
+          "name": "Malia M. Cohen",
+          "party": "Democratic",
+          "ballot_designation": "State Controller/Mother",
+          "incumbent": true
+        },
+        {
+          "slug": "herb-morgan",
+          "name": "Herb W Morgan",
+          "party": "Republican",
+          "ballot_designation": "Chief Investment Officer",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "insurance-commissioner",
@@ -67,7 +157,22 @@
       "district": null,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "ben-allen",
+          "name": "Ben Allen",
+          "party": "Democratic",
+          "ballot_designation": "California State Senator",
+          "incumbent": false
+        },
+        {
+          "slug": "jane-kim",
+          "name": "Jane Kim",
+          "party": "Democratic",
+          "ballot_designation": "Attorney/Consumer Advocate",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "superintendent-of-public-instruction",
@@ -75,7 +180,22 @@
       "district": null,
       "level": "statewide",
       "partisan": false,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "richard-barrera",
+          "name": "Richard Barrera",
+          "party": null,
+          "ballot_designation": "State Superintendent Advisor",
+          "incumbent": false
+        },
+        {
+          "slug": "sonja-shaw",
+          "name": "Sonja Shaw",
+          "party": null,
+          "ballot_designation": "School District President",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "board-of-equalization-1",
@@ -83,7 +203,22 @@
       "district": 1,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "nelson-esparza",
+          "name": "Nelson Esparza",
+          "party": "Democratic",
+          "ballot_designation": "Teacher/Economist/Councilmember",
+          "incumbent": false
+        },
+        {
+          "slug": "shannon-grove",
+          "name": "Shannon Grove",
+          "party": "Republican",
+          "ballot_designation": "State Senator/Businesswoman",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "board-of-equalization-2",
@@ -91,7 +226,22 @@
       "district": 2,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "sally-lieber",
+          "name": "Sally J. Lieber",
+          "party": "Democratic",
+          "ballot_designation": "Incumbent",
+          "incumbent": true
+        },
+        {
+          "slug": "john-pimentel",
+          "name": "John Pimentel",
+          "party": "Democratic",
+          "ballot_designation": "Member, Board of Trustees, San Mateo County Community College District",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "board-of-equalization-3",
@@ -99,7 +249,22 @@
       "district": 3,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "mike-gipson",
+          "name": "Mike Gipson",
+          "party": "Democratic",
+          "ballot_designation": "State Assemblymember/Father",
+          "incumbent": false
+        },
+        {
+          "slug": "samuel-sukaton",
+          "name": "Samuel P. Sukaton",
+          "party": "Democratic",
+          "ballot_designation": "Labor Union Organizer",
+          "incumbent": false
+        }
+      ]
     },
     {
       "slug": "board-of-equalization-4",
@@ -107,7 +272,22 @@
       "district": 4,
       "level": "statewide",
       "partisan": true,
-      "candidates": []
+      "candidates": [
+        {
+          "slug": "tom-umberg",
+          "name": "Tom Umberg",
+          "party": "Democratic",
+          "ballot_designation": "Small Businessman/Senator",
+          "incumbent": false
+        },
+        {
+          "slug": "denis-bilodeau",
+          "name": "Denis Bilodeau",
+          "party": "Republican",
+          "ballot_designation": "Councilmember/Civil Engineer",
+          "incumbent": false
+        }
+      ]
     }
   ]
 }

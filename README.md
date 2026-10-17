@@ -40,7 +40,7 @@ dollars a month at this volume.
 
 ## Running it
 
-Without any account, on sample data:
+Without any account, on the seed files:
 
 ```
 npm install

@@ -33,7 +33,7 @@ with bias flags).
 ```
 npm install            # once; the cloud session hook runs this for you
 npm run dev            # web app on http://localhost:3000, needs .env.local
-npm run dev:demo       # same, on the seed files with sample candidates, no sign-in
+npm run dev:demo       # same, on the seed files, no sign-in
 npm run check          # next typegen + tsc + eslint + prettier --check
 npm test               # vitest: units, seed files, database access rules (PGlite)
 npm run build          # production build; works with no keys at all
@@ -226,7 +226,7 @@ full plan, with the acceptance checks for each build step, is QA's
   would republish copyrighted work. Evals store URL, outlet, date, labels and
   the short quotes behind each label; full text is fetched at eval time into a
   gitignored cache.
-- Playwright runs against demo mode (the seed files, sample candidates) and a
+- Playwright runs against demo mode (the seed files) and a
   production build with placeholder Supabase settings, never against live
   news, a model or a real account. Once analyses exist it uses precomputed
   fixtures for them.
