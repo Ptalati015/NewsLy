@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { SERVER_KEY_SENTINELS } from "./sentinels";
 
@@ -69,4 +70,18 @@ export async function expectNoServerKeysServed(page: Page, paths: string[]) {
   await Promise.all(reads);
   expect(reads.length).toBeGreaterThan(paths.length);
   expect(leaks).toEqual([]);
+}
+
+// Runs axe (every rule it has, not only the WCAG A and AA ones) on the page
+// as it is now. Any violation fails, whatever its impact, with the rule and
+// the elements it flagged.
+export async function expectNoAccessibilityIssues(page: Page) {
+  const { violations } = await new AxeBuilder({ page }).analyze();
+  expect(
+    violations.map((v) => ({
+      rule: v.id,
+      impact: v.impact,
+      elements: v.nodes.map((n) => n.target.join(" ")),
+    })),
+  ).toEqual([]);
 }
