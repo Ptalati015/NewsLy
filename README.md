@@ -8,7 +8,8 @@ races. Built for one reader first, with sign-in so more can be invited later.
 
 ## Status
 
-Design approved, code not started. The design, the bias rubric, the data flow
+Build step 1 (skeleton) in review: sign-in, the state, election, race and
+candidate screens, the database tables and CI. The design, the bias rubric, the data flow
 and the build order are in [`docs/design.md`](docs/design.md). Working rules for
 contributors and AI coding agents are in [`AGENTS.md`](AGENTS.md).
 
@@ -39,14 +40,21 @@ dollars a month at this volume.
 
 ## Running it
 
-Nothing to run yet. Once the first build step lands:
+Without any account, on the seed files:
+
+```
+npm install
+npm run dev:demo               # http://localhost:3000, no sign-in
+```
+
+With the real accounts (see [`docs/setup.md`](docs/setup.md) for creating them):
 
 ```
 cp .env.example .env.local     # Supabase values; the fake model provider is the default
-npm install
 npm run dev                    # http://localhost:3000
-npm run job:daily -- --dry-run # the news run without writes or model calls
 ```
+
+Tests: `npm run check`, `npm test`, then `npm run build && npm run e2e`.
 
 ## Layout
 

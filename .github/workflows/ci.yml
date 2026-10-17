@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push to the same branch cancels the older run, to save minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Tests never call a real model or a paid service.
+      LLM_PROVIDER: fake
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type check, lint and format
+        run: npm run check
+      - name: Unit and database access tests
+        run: npm test
+      - name: Production build (no real keys)
+        run: npm run build
+        env:
+          # Stand-ins for the server-only keys, so the next step can prove
+          # neither one ends up in what the browser downloads.
+          SUPABASE_SECRET_KEY: sentinel-supabase-secret-not-a-key
+          AI_GATEWAY_API_KEY: sentinel-ai-gateway-not-a-key
+      - name: Check no server-only key reached the build output
+        run: |
+          if grep -rIl -e sentinel-supabase-secret -e sentinel-ai-gateway .next/static .next/server/app; then
+            echo "A server-only key appears in the files listed above." >&2
+            exit 1
+          fi
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Screen and sign-in tests
+        run: npm run e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

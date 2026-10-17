@@ -262,6 +262,45 @@ Pacific.
    digest; candidate page; evals and the manual live workflow.
 4. **Tune.** A week of real reading, then adjust flags, sources and the model.
 
+**Step 1 as built (October 16, 2026).** Where the build fills in or departs
+from the plan above:
+
+- Screens: `/sign-in`, `/states`, `/ca`, `/ca/2026-11-03-general`,
+  `/ca/2026-11-03-general/governor` and one page per candidate, plus
+  `/account` (who is signed in, when the session ends, sign out).
+- Session expiry is enforced by the app, because Supabase's time-box and
+  inactivity settings are paid-plan features: 30 days from the sign-in time
+  in the signed access token, 7 days from a last-seen cookie. Either one
+  revokes the session at Supabase, not just in the browser.
+- Candidates: the 24 people in the 12 statewide races, copied from the
+  Secretary of State's certified list (certified August 27, 2026) in
+  `data/ca-2026-general.json` and checked against the PDF on October 17,
+  2026: name and ballot designation as printed, party (none in the
+  nonpartisan Superintendent race), and incumbency from the list's asterisk.
+  Each candidate's news search uses the name as stories print it (the
+  ballot's nickname, no middle initials) plus the office.
+- Demo mode (`npm run dev:demo`) shows the screens on the seed files, so the
+  UI can be built and tested before any account exists. Production builds
+  ignore it.
+- The app reads the time only through `lib/clock.ts`. In demo mode
+  `NEWSLY_NOW` pins it, so the browser tests run on October 20, 2026 (14 days
+  before the election); production always uses the real time.
+- The database holds only what step 1 reads (states, elections, races,
+  candidates, allowed_emails, and `profiles`, which is the data model's
+  `users` table: Supabase already has `auth.users`). News tables arrive with
+  steps 2 and 3.
+- The allow-list is enforced in the app (`ALLOWED_EMAILS`, every request) and
+  in the database (`allowed_emails`, through `is_allowed()` in every reader
+  policy). The table can't be filled from the env var without a server key in
+  the web app, so the owner adds each email in both places, with one SQL line
+  (`docs/setup.md`).
+- Supabase's newer key names (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and
+  `SUPABASE_SECRET_KEY`, replacing the anon and service role keys Supabase
+  retires by the end of 2026): the publishable key in the web app, the secret
+  key only in the daily job. Account setup is in `docs/setup.md`.
+- Candidate cards show name, party and incumbency for now; the latest
+  headline and coverage balance arrive with step 3.
+
 ## Sources
 
 - California Secretary of State, certified candidate list for November 3,
